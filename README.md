@@ -65,7 +65,6 @@ Each script will:
 3. Save visualizations to the `results/` directory
 
 ## Sample Results
-![Model Comparison](results/model_comparison.png)
 
 | Model   | RMSE  | Training Time |
 |---------|-------|---------------|
