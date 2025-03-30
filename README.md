@@ -65,11 +65,29 @@ Each script will:
 3. Save visualizations to the `results/` directory
 
 ## Sample Results
+## Results
 
-| Model   | RMSE  | Training Time |
-|---------|-------|---------------|
-| XGBoost | 1.89  | 30s           |
-| LSTM    | 1.75  | 2min          |
+### Model Performance
+| Model   | Validation Loss (MSE) | RMSE (Scaled Data) | Estimated RMSE ($)* | Training Time |
+|---------|-----------------------|--------------------|---------------------|---------------|
+| LSTM    | 6.89 × 10⁻⁵           | 0.0083             | 0.42                | ~2 minutes    |
+
+*Assuming crude oil prices range $50-$100. Calculated as:  
+`RMSE ($) = RMSE (scaled) × (max_price - min_price) = 0.0083 × 50 = $0.42`
+
+### Key Metrics Interpretation
+- **Low Validation Loss**: Final MSE of 6.89 × 10⁻⁵ indicates strong convergence
+- **Scaled RMSE**: 0.0083 (on 0-1 normalized data)
+- **Dollar RMSE**: ~$0.42 error on $50-$100 price range (~0.84% error)
+
+### How to Verify
+1. Check inverse-transformed predictions:
+```python
+# In your lstm_forecast.py:
+predictions = scaler.inverse_transform(predictions)
+y_test_inv = scaler.inverse_transform(y_test.reshape(-1, 1))
+rmse_dollars = np.sqrt(mean_squared_error(y_test_inv, predictions))
+print(f"Actual RMSE in dollars: ${rmse_dollars:.2f}")
 
 ## Customization
 To modify the project:
